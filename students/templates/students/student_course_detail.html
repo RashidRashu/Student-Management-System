@@ -1,0 +1,24 @@
+{% extends 'students/base.html' %}
+{% block content %}
+<h1 class="page-title">Course Details</h1>
+
+{% if not_allowed %}
+  <div class="card">
+    <p style="color:red; font-weight:800;">You are not enrolled in this course.</p>
+    <a class="btn" href="{% url 'student_portal' %}">Back</a>
+  </div>
+{% else %}
+  <div class="card">
+    <h2 style="margin-top:0;">{{ course.course_code }} - {{ course.course_name }}</h2>
+    <p><b>Provider:</b> {{ course.provider }}</p>
+    <p><b>Instructor:</b> {{ course.teacher_name }}</p>
+    <p><b>Description:</b> {{ course.description }}</p>
+    <hr>
+    <p><b>Marks:</b> {{ enrollment.marks|default:"-" }}</p>
+    <p><b>Grade:</b> {{ enrollment.grade_letter|default:"-" }}</p>
+    <p><b>Attendance:</b> {{ attendance_percent }}% (Present {{ present_classes }} / {{ total_classes }})</p>
+
+    <a class="btn" href="{% url 'student_portal' %}">Back to Portal</a>
+  </div>
+{% endif %}
+{% endblock %}

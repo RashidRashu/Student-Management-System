@@ -1,0 +1,23 @@
+{% extends 'students/base.html' %}
+{% block title %}Enroll Student — SMS{% endblock %}
+{% block content %}
+
+<div class="flex-between mb-16">
+    <h1 class="page-title">🔗 Enroll Student</h1>
+    <a href="{% url 'student_list' %}" class="btn btn-secondary">← Back</a>
+</div>
+
+<div class="card" style="max-width:480px;">
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn">Enroll</button>
+    </form>
+</div>
+
+{% endblock %}

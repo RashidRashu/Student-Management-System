@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login — SMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="{% static 'students/style.css' %}">
+</head>
+
+<body>
+    <div class="auth-wrap">
+        <div class="auth-box">
+
+            <div class="auth-logo">
+                <span class="icon"><i data-lucide="shield" style="width: 48px; height: 48px; color: #38bdf8; display: inline-block;"></i></span>
+                <h1>Admin Login</h1>
+                <p>Student Management System</p>
+            </div>
+
+            {% if error %}
+            <div class="error-msg"><i data-lucide="alert-triangle" style="width: 18px; height: 18px;"></i> {{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter username" autofocus required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn" style="width:100%; justify-content:center; padding:12px;">
+                    Sign In as Admin
+                </button>
+            </form>
+
+            <p style="text-align:center; margin-top:22px; font-size:13px; color:var(--muted);">
+                Are you a student? <a href="{% url 'student_login' %}">Student Login →</a>
+            </p>
+            <p style="text-align:center; margin-top:8px; font-size:13px; color:var(--muted);">
+                <a href="{% url 'landing' %}">← Back to Home</a>
+            </p>
+
+        </div>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

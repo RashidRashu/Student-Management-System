@@ -1,0 +1,26 @@
+{% extends 'students/base.html' %}
+{% block title %}{{ form.instance.first_name|default:'New Student' }} — SMS{% endblock %}
+{% block content %}
+
+<div class="flex-between mb-16">
+    <h1 class="page-title">{% if form.instance.pk %}<i data-lucide="edit" class="icon-inline"></i> Edit Student{% else %}<i data-lucide="plus" class="icon-heading"></i> Add Student{% endif %}</h1>
+    <a href="{% url 'student_list' %}" class="btn btn-secondary">← Back</a>
+</div>
+
+<div class="card" style="max-width:640px;">
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div style="color:var(--danger); font-size:12px; margin-top:4px;">{{ field.errors.0 }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn">💾 Save</button>
+    </form>
+</div>
+
+{% endblock %}

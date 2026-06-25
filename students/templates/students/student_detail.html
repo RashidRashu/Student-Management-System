@@ -1,0 +1,132 @@
+{% extends 'students/base.html' %}
+
+{% block content %}
+
+<style>
+    .grade-A {
+        color: green;
+        font-weight: bold;
+    }
+
+    .grade-B {
+        color: #2e8b57;
+    }
+
+    .grade-C {
+        color: #ff8c00;
+    }
+
+    .grade-D {
+        color: #cc8400;
+    }
+
+    .grade-F {
+        color: red;
+        font-weight: bold;
+    }
+
+    .overall-A {
+        color: green;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .overall-F {
+        color: red;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 60%;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #564141;
+    }
+</style>
+
+<h2>Student Details</h2>
+
+<p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+<p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }}</p>
+<p><strong>Class:</strong> {{ student.class_name }}</p>
+<p><strong>Email:</strong> {{ student.email }}</p>
+<p><strong>Phone:</strong> {{ student.phone }}</p>
+<p><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
+<p><strong>Address:</strong> {{ student.address }}</p>
+<p><strong>Admission Date:</strong> {{ student.admission_date }}</p>
+
+<hr>
+
+<h3>Course Grades</h3>
+
+<table>
+    <tr>
+        <th>Course</th>
+        <th>Marks</th>
+        <th>Grade</th>
+    </tr>
+
+    {% for enrollment in enrollments %}
+    <tr>
+        <td>{{ enrollment.course.course_name }}</td>
+        <td>{{ enrollment.marks }}</td>
+        <td class="grade-{{ enrollment.grade_letter }}">
+            {{ enrollment.grade_letter }}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">No grades available</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<h3>Average Marks: {{ average_marks|floatformat:2 }}</h3>
+
+<h3 class="overall-{{ overall_grade }}">
+    Overall Grade: {{ overall_grade }}
+</h3>
+<br>
+<a href="{% url 'report_card' student.pk %}">
+    <button>View Report Card</button>
+</a>
+<br>
+<h3>Attendance Summary</h3>
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Course</th>
+        <th>Attended</th>
+        <th>Total</th>
+        <th>%</th>
+    </tr>
+
+    {% for r in attendance_rows %}
+    <tr>
+        <td>{{ r.course.course_name }}</td>
+        <td>{{ r.present }}</td>
+        <td>{{ r.total }}</td>
+        <td>{{ r.percent }}%</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">No attendance data yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="{% url 'student_list' %}">Back to List</a>
+
+{% endblock %}

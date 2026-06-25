@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign In — SMS</title>
+  <meta name="description" content="Unified login for admin, instructor, and student users.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="{% static 'students/style.css' %}">
+</head>
+
+<body>
+  <div class="auth-wrap">
+    <div class="auth-box">
+
+      <div class="auth-logo">
+        <span class="icon"><i data-lucide="unlock" style="width: 48px; height: 48px; color: #38bdf8; display: inline-block;"></i></span>
+        <h1>Sign In</h1>
+        <p>One login for Admin, Instructor, and Student</p>
+      </div>
+
+      {% if error %}
+      <div class="error-msg"><i data-lucide="alert-triangle" style="width: 18px; height: 18px;"></i> {{ error }}</div>
+      {% endif %}
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="Enter your username" autofocus required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn" style="width:100%; justify-content:center; padding:12px;">
+          Sign In
+        </button>
+      </form>
+
+      <p style="text-align:center; margin-top:22px; font-size:13px; color:var(--muted);">
+        Your role will be detected automatically after login.
+      </p>
+      <p style="text-align:center; margin-top:8px; font-size:13px; color:var(--muted);">
+        <a href="{% url 'startup' %}" class="btn_left">← Back to Home</a>
+      </p>
+
+    </div>
+  </div>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+{% extends 'students/base.html' %}
+{% block title %}Instructor Dashboard — SMS{% endblock %}
+
+{% block content %}
+
+<div class="flex-between mb-16">
+    <div>
+        <h1 class="page-title"><i data-lucide="graduation-cap" class="icon-heading"></i> Instructor Dashboard</h1>
+        <p class="page-subtitle">Welcome, <strong>{{ request.user.get_full_name|default:request.user.username }}</strong></p>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="grid-3">
+    <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="num">{{ total_courses }}</div>
+        <div class="label">My Courses</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="users" class="icon-heading"></i></div>
+        <div class="num">{{ total_students }}</div>
+        <div class="label">Total Students</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="megaphone" class="icon-heading"></i></div>
+        <div class="num">{{ announcements|length }}</div>
+        <div class="label">Announcements</div>
+    </div>
+</div>
+
+<!-- My Courses -->
+<div class="card mb-16">
+    <div class="card-header">
+        <span class="card-title">📚 My Courses</span>
+    </div>
+
+    {% if courses %}
+    <div class="table-wrap" style="margin-bottom:0;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Course Name</th>
+                    <th>Students</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td><span class="badge badge-muted">{{ course.course_code }}</span></td>
+                    <td><strong>{{ course.course_name }}</strong></td>
+                    <td>{{ course.enrollment_set.count }}</td>
+                    <td>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <a href="{% url 'instructor_course_detail' course.id %}" class="btn btn-sm">📋 View</a>
+                            <a href="{% url 'instructor_mark_attendance' course.id %}" class="btn btn-sm btn-outline">📅 Attendance</a>
+                            <a href="{% url 'instructor_enter_grades' course.id %}" class="btn btn-sm btn-success"><i data-lucide="edit" class="icon-inline"></i> Grades</a>
+                            <a href="{% url 'instructor_attendance_report' course.id %}" class="btn btn-sm btn-secondary"><i data-lucide="bar-chart-2" class="icon-heading"></i> Report</a>
+                            <a href="{% url 'instructor_add_announcement' %}" class="btn btn-sm btn-secondary"><i data-lucide="megaphone" class="icon-heading"></i> Create Announcement</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="padding:32px; text-align:center; color:var(--muted);">
+        <p>No courses assigned to you yet. Please contact an admin.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Announcements -->
+{% if announcements %}
+<div class="card">
+    <div class="card-header">
+        <span class="card-title"><i data-lucide="megaphone" class="icon-heading"></i> Announcements</span>
+    </div>
+    {% for a in announcements %}
+    <div class="announcement-item" style="margin-bottom:10px; padding: 10px 0; border-bottom:1px solid var(--border);">
+        <h3 style="margin:0 0 4px 0;">{{ a.title }}</h3>
+        <div class="meta">{{ a.date_posted|date:"M d, Y" }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

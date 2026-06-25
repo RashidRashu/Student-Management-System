@@ -1,0 +1,82 @@
+{% extends 'students/base.html' %}
+
+{% block title %}{{ course.course_name }} · SMS{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="flex-between mb-16">
+    <div>
+        <h1 class="page-title">📚 {{ course.course_name }}</h1>
+        <p class="page-subtitle">Code: <strong class="text-brand">{{ course.course_code }}</strong> &nbsp;·&nbsp;
+            Teacher: {{ course.teacher_name }}</p>
+    </div>
+    <a href="{% url 'course_list' %}" class="btn btn-secondary">← Back to Courses</a>
+</div>
+
+<!-- Stat Card -->
+<div class="grid-3" style="grid-template-columns: 1fr 1fr 1fr;">
+    <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="book-open" class="icon-heading"></i></div>
+        <div class="num">{{ enrollments|length }}</div>
+        <div class="label">Students Enrolled</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="num">{{ course.course_code }}</div>
+        <div class="label">Course Code</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="graduation-cap" class="icon-heading"></i></div>
+        <div class="num" style="font-size:22px; line-height:1.3;">{{ course.teacher_name }}</div>
+        <div class="label">Instructor</div>
+    </div>
+</div>
+
+<!-- Enrolled Students Table -->
+<div class="table-wrap">
+    <div class="card-header" style="padding: 16px 20px; margin-bottom:0;">
+        <span class="card-title">👥 Enrolled Students</span>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Marks</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for enrollment in enrollments %}
+            <tr>
+                <td class="text-muted">{{ enrollment.student.roll_number }}</td>
+                <td><strong>{{ enrollment.student.first_name }} {{ enrollment.student.last_name }}</strong></td>
+                <td>{{ enrollment.marks }}</td>
+                <td>
+                    {% if enrollment.grade_letter %}
+                    <span class="badge badge-{{ enrollment.grade_letter }}">{{ enrollment.grade_letter }}</span>
+                    {% else %}
+                    <span class="badge badge-muted">—</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center; color:var(--muted); padding: 32px;">No students enrolled in
+                    this course yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Action Buttons -->
+<div class="quick-actions mt-16">
+    <a href="{% url 'mark_attendance' course.id %}" class="btn">📅 Mark Attendance</a>
+    <a href="{% url 'attendance_report' course.id %}" class="btn btn-outline"><i data-lucide="bar-chart-2" class="icon-heading"></i> View Attendance Report</a>
+    <a href="{% url 'enter_grades' course.id %}" class="btn btn-success"><i data-lucide="edit" class="icon-inline"></i> Enter Grades</a>
+    <a href="{% url 'course_detail' course.id %}" class="btn btn-warning">📄 View Grade Report</a>
+</div>
+
+{% endblock %}

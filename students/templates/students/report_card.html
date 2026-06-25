@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Card</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            padding: 30px;
+        }
+
+        .report-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .school-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .student-info {
+            margin-bottom: 20px;
+        }
+
+        .student-photo {
+            float: right;
+            width: 100px;
+            height: 120px;
+            border: 1px solid #ccc;
+            text-align: center;
+            line-height: 120px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        .summary {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .print-btn {
+            margin-top: 20px;
+        }
+
+        @media print {
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="report-card">
+
+    <div class="header">
+        <div class="school-name">Student Management System</div>
+        <div>Academic Report Card</div>
+    </div>
+
+    <div class="student-info">
+        <div class="student-photo">Photo</div>
+        <p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }}</p>
+        <p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+        <p><strong>Class:</strong> {{ student.class_name }}</p>
+    </div>
+
+    <table>
+        <tr>
+            <th>Course Name</th>
+            <th>Marks</th>
+            <th>Grade</th>
+            <th>Attendance %</th>
+        </tr>
+
+        {% for item in report_data %}
+        <tr>
+            <td>{{ item.course.course_name }}</td>
+            <td>{{ item.marks }}</td>
+            <td>{{ item.grade }}</td>
+            <td>{{ item.attendance }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="summary">
+        <p>Total Courses Enrolled: {{ total_courses }}</p>
+        <p>Overall Average Marks: {{ average_marks }}</p>
+        <p>Overall Grade: {{ overall_grade }}</p>
+    </div>
+
+    <div class="print-btn">
+        <button onclick="window.print()">Print</button>
+    </div>
+
+</div>
+
+</body>
+</html>

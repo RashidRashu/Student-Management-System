@@ -1,0 +1,372 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Student Management System{% endblock %}</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'students/style.css' %}">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    .layout {
+      display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: #020617;
+      padding: 24px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      border-right: 1px solid #1e293b;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .sidebar h2 {
+      color: #f8fafc;
+      margin-bottom: 32px;
+      font-size: 24px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar h2 i {
+      color: #38bdf8;
+      width: 28px;
+      height: 28px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      margin: 4px 0;
+      color: #94a3b8;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .sidebar a:hover {
+      background: #1e293b;
+      color: #e2e8f0;
+      transform: translateX(4px);
+    }
+
+    .sidebar a i {
+      width: 20px;
+      height: 20px;
+      color: #64748b;
+      transition: color 0.2s ease;
+    }
+
+    .sidebar a:hover i {
+      color: #38bdf8;
+    }
+
+    .logout {
+      color: #ef4444 !important;
+      margin-top: auto;
+      margin-bottom: 20px;
+    }
+
+    .logout i {
+      color: #ef4444 !important;
+    }
+
+    .logout:hover {
+      color: #f87171 !important;
+      background: rgba(239, 68, 68, 0.1) !important;
+    }
+
+    .logout:hover i {
+      color: #f87171 !important;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 260px;
+      padding: 40px;
+      width: calc(100% - 260px);
+      box-sizing: border-box;
+      min-height: 100vh;
+      background: #0f172a;
+    }
+
+    .topbar {
+      font-size: 22px;
+      font-weight: bold;
+      color: #38bdf8;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .alert {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+    }
+
+    .alert-success {
+      background: #14532d;
+    }
+
+    .alert-error {
+      background: #7f1d1d;
+    }
+
+    .alert-info {
+      background: #1e3a8a;
+    }
+
+    .page-split {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .side-panel {
+      width: 320px;
+      min-width: 280px;
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 18px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .content-panel {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: #cbd5e1;
+    }
+
+    .panel-item {
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+    }
+
+    .panel-item strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #f8fafc;
+    }
+
+    .panel-summary {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .panel-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .panel-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .panel-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 200px;
+        padding: 20px 14px;
+      }
+
+      .main {
+        margin-left: 200px;
+        width: calc(100% - 200px);
+        padding: 30px 20px;
+      }
+
+      .sidebar h2 {
+        font-size: 20px;
+        margin-bottom: 24px;
+      }
+
+      .sidebar a {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid #1e293b;
+        padding: 16px;
+      }
+
+      .logout {
+        margin-top: 20px;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 24px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h2><i data-lucide="school"></i> SMS</h2>
+
+      {% if user.is_authenticated %}
+
+      {% if user.is_staff or user.is_superuser %}
+      <!-- ADMIN PAGE SIDE NAVIGATION BAR -->
+      <a href="{% url 'admin_dashboard' %}">
+        <i data-lucide="layout-dashboard"></i> Dashboard
+      </a>
+      <a href="{% url 'student_list' %}">
+        <i data-lucide="users"></i> Students
+      </a>
+      <a href="{% url 'instructor_list' %}">
+        <i data-lucide="user-check"></i> Instructors
+      </a>
+      <a href="{% url 'course_list' %}">
+        <i data-lucide="book-open"></i> Courses
+      </a>
+      <a href="{% url 'announcement_list' %}">
+        <i data-lucide="megaphone"></i> Announcements
+      </a>
+      <a href="{% url 'admin_logout' %}" class="logout">
+        <i data-lucide="log-out"></i> Logout
+      </a>
+
+      {% elif user.groups.all|length > 0 and user.groups.all.0.name == 'Instructor' %}
+      <!-- INSTRUCTOR -->
+      <a href="{% url 'instructor_dashboard' %}">
+        <i data-lucide="layout-dashboard"></i> My Dashboard
+      </a>
+      <a href="{% url 'instructor_add_announcement' %}">
+        <i data-lucide="megaphone"></i> Add Announcement
+      </a>
+      <a href="{% url 'instructor_logout' %}" class="logout">
+        <i data-lucide="log-out"></i> Logout
+      </a>
+
+      {% else %}
+      <!-- STUDENT -->
+      <a href="{% url 'student_portal' %}">
+        <i data-lucide="layout"></i> My Portal
+      </a>
+      <a href="{% url 'student_report_card' %}">
+        <i data-lucide="bar-chart-2"></i> Report Card
+      </a>
+      <a href="{% url 'student_logout' %}" class="logout">
+        <i data-lucide="log-out"></i> Logout
+      </a>
+
+      {% endif %}
+
+      {% else %}
+      <!-- GUEST -->
+      <a href="{% url 'landing' %}">
+        <i data-lucide="home"></i> Home
+      </a>
+      <a href="{% url 'login' %}">
+        <i data-lucide="user"></i> Sign In
+      </a>
+      {% endif %}
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+      <div class="topbar">
+        Student Management System
+      </div>
+
+      <!-- Messages -->
+      {% for message in messages %}
+      <div
+        class="alert alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      <div class="container">
+        {% block content %}{% endblock %}
+      </div>
+
+      <div class="footer">
+        © 2026 Student Management System · Sociodynamics AI · Rashid A
+      </div>
+
+    </div>
+
+  </div>
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+
+</html>

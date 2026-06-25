@@ -1,0 +1,91 @@
+{% extends 'students/base.html' %}
+{% block title %}Admin Dashboard — SMS{% endblock %}
+{% block content %}
+
+<div class="flex-between mb-16">
+    <div>
+        <h1 class="page-title"><i data-lucide="home" class="icon-heading"></i> Admin Dashboard</h1>
+        <p class="page-subtitle">Welcome back <strong>
+    </div>
+    <div class="quick-actions" style="margin-bottom:0;">
+        <a href="{% url 'add_announcement' %}" class="btn btn-outline"><i data-lucide="megaphone" class="icon-heading"></i> Post Announcement</a>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="grid-3">
+    <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="users" class="icon-heading"></i></div>
+        <div class="num">{{ total_students }}</div>
+        <div class="label">Total Students</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="num">{{ total_courses }}</div>
+        <div class="label">Total Courses</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="clipboard-list" class="icon-heading"></i></div>
+        <div class="num">{{ total_enrollments }}</div>
+        <div class="label">Total Enrollments</div>
+    </div>
+</div>
+
+<!-- Quick Navigation -->
+<div class="card mb-16">
+    <div class="card-header">
+        <span class="card-title">⚡ Quick Actions</span>
+    </div>
+    <div class="quick-actions" style="margin-bottom:0;">
+        <a href="{% url 'student_list' %}" class="btn btn-secondary">📋 Manage Students</a>
+        <a href="{% url 'course_list' %}" class="btn btn-secondary">📚 Manage Courses</a>
+        <a href="{% url 'enroll' %}" class="btn btn-secondary">🔗 Enroll Student</a>
+        <a href="{% url 'announcement_list' %}" class="btn btn-secondary"><i data-lucide="megaphone" class="icon-heading"></i> Announcements</a>
+        <a href="{% url 'add_course' %}" class="btn btn-secondary">📚 Add Course</a>
+    </div>
+</div>
+
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px;">
+
+    <!-- Recent Students -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title"><i data-lucide="users" class="icon-heading"></i> Recent Students</span>
+            <a href="{% url 'student_list' %}" class="btn btn-sm btn-outline">View All</a>
+        </div>
+        {% for s in recent_students %}
+        <div
+            style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
+            <div>
+                <div style="font-weight:700; font-size:14px;">{{ s.first_name }} {{ s.last_name }}</div>
+                <div style="color:var(--muted); font-size:12px;">{{ s.roll_number }} · {{ s.class_name }}</div>
+            </div>
+            <a href="{% url 'student_detail' s.pk %}" class="btn btn-sm btn-outline">View</a>
+        </div>
+        {% empty %}
+        <p class="text-muted" style="font-size:13px;">No students yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Recent Announcements -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title"><i data-lucide="megaphone" class="icon-heading"></i> Recent Announcements</span>
+            <a href="{% url 'add_announcement' %}" class="btn btn-sm">+ New</a>
+        </div>
+        {% for a in recent_announcements %}
+        <div class="announcement-item" style="margin-bottom:10px;">
+            <h3>{{ a.title }}</h3>
+            <div class="meta">{{ a.date_posted|date:"M d, Y" }}
+                {% if not a.is_active %}<span class="badge badge-muted ml-4">Inactive</span>{% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted" style="font-size:13px;">No announcements yet.</p>
+        {% endfor %}
+        <a href="{% url 'announcement_list' %}" style="font-size:13px; display:block; margin-top:10px;">View all →</a>
+    </div>
+
+</div>
+
+{% endblock %}

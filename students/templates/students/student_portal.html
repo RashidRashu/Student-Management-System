@@ -1,0 +1,143 @@
+{% extends 'students/base.html' %}
+{% block title %}My Portal — Student Management System{% endblock %}
+{% block content %}
+
+<h1 class="page-title">👋 Welcome, {{ student.first_name }}!</h1>
+<p class="page-subtitle">
+  {{ student.roll_number }} · {{ student.class_name }}
+</p>
+
+<!-- Stats -->
+<div class="grid-3">
+  <div class="stat-card">
+    <div class="stat-icon">📚</div>
+    <div class="num">{{ total_courses }}</div>
+    <div class="label">Enrolled Courses</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon"><i data-lucide="bar-chart-2" class="icon-heading"></i></div>
+    <div class="num">
+      {{ average_marks|floatformat:1|default:"—" }}
+    </div>
+    <div class="label">Average Marks</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">🏅</div>
+    <div class="num">{{ overall_grade|default:"—" }}</div>
+    <div class="label">Overall Grade</div>
+  </div>
+</div>
+
+<!-- Quick Links -->
+<div class="quick-actions">
+  <a href="{% url 'student_report_card' %}" class="btn">
+    📄 View Report Card
+  </a>
+</div>
+
+<!-- Course Section -->
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">📚 My Courses</span>
+  </div>
+
+  {% if courses %}
+  <div class="table-wrap" style="border:none; border-radius:0; margin-bottom:0;">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Code</th>
+          <th>Teacher</th>
+          <th>Marks</th>
+          <th>Grade</th>
+          <th>Attendance</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for c in courses %}
+        <tr>
+          <td>
+            <strong>{{ c.course.course_name }}</strong>
+          </td>
+
+          <td>
+            <span class="badge badge-muted">
+              {{ c.course.course_code }}
+            </span>
+          </td>
+
+          <td class="text-muted">
+            {{ c.course.teacher_name }}
+          </td>
+
+          <td>
+            {{ c.marks|default:"—" }}
+          </td>
+
+          <td>
+            {% if c.grade %}
+            <span class="badge badge-{{ c.grade|slugify }}">
+              {{ c.grade }}
+            </span>
+            {% else %}
+            —
+            {% endif %}
+          </td>
+
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span>{{ c.attendance|default:0 }}%</span>
+
+              <div class="progress-bar" style="width:80px;">
+                <div class="progress-fill" style="--width: {{ c.attendance|default:0 }}%;"></div>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <a href="{% url 'student_course_detail' c.course.id %}" class="btn btn-sm btn-outline">
+              Details
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% else %}
+  <p class="text-muted" style="font-size:14px;">
+    You are not enrolled in any courses yet.
+  </p>
+  {% endif %}
+</div>
+
+<!-- Announcements -->
+<div class="card">
+  <div class="card-header">
+    <span class="card-title"><i data-lucide="megaphone" class="icon-heading"></i> Announcements</span>
+  </div>
+
+  {% for a in announcements %}
+  <div class="announcement-item">
+    <h3>{{ a.title }}</h3>
+    <div class="meta">
+      {{ a.date_posted|date:"F j, Y" }}
+    </div>
+    <p style="font-size:13px; margin-top:6px; color:var(--muted);">
+      {{ a.content|truncatechars:120 }}
+    </p>
+  </div>
+  {% empty %}
+  <p class="text-muted" style="font-size:14px;">
+    No announcements at this time.
+  </p>
+  {% endfor %}
+</div>
+
+{% endblock %}

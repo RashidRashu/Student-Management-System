@@ -1,0 +1,64 @@
+{% extends 'students/base.html' %}
+{% block title %}My Report Card — SMS{% endblock %}
+{% block content %}
+
+<div class="flex-between mb-16">
+    <div>
+        <h1 class="page-title">📄 Report Card</h1>
+        <p class="page-subtitle">{{ student.first_name }} {{ student.last_name }} · {{ student.roll_number }}</p>
+    </div>
+    <div>
+        <span class="badge badge-{{ overall_grade|default:'muted' }}" style="font-size:22px; padding:10px 22px;">
+            Overall: {{ overall_grade|default:"N/A" }}
+        </span>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <span class="card-title"><i data-lucide="bar-chart-2" class="icon-heading"></i> Course-wise Performance</span>
+        <span class="text-muted" style="font-size:13px;"><h3>Average Marks: {{ average_marks|floatformat:2 }}</h3></span>
+    </div>
+    <div class="table-wrap" style="border:none; border-radius:0; margin-bottom:0;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Code</th>
+                    <th>Marks</th>
+                    <th>Grade</th>
+                    <th>Attendance %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in report_data %}
+                <tr>
+                    <td><strong>{{ row.course.course_name }}</strong></td>
+                    <td><span class="badge badge-muted">{{ row.course.course_code }}</span></td>
+                    <td>{{ row.marks|default:"Not graded" }}</td>
+                    <td>
+                        {% if row.grade %}
+                        <span class="badge badge-{{ row.grade }}">{{ row.grade }}</span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span>{{ row.attendance }}%</span>
+                            <div class="progress-bar" style="width:100px;">
+                                <div class="progress-fill" style="--width: {{ row.attendance|default:0 }}%;"></div>
+                            </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-muted">No courses enrolled.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="{% url 'student_portal' %}" class="btn btn-secondary">← Back to Portal</a>
+
+{% endblock %}

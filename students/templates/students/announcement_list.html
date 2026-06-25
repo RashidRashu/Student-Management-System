@@ -1,0 +1,45 @@
+{% extends 'students/base.html' %}
+{% block title %}Announcements — SMS{% endblock %}
+{% block content %}
+
+<div class="flex-between mb-16">
+    <div>
+        <h1 class="page-title"><i data-lucide="megaphone" class="icon-heading"></i> Announcements</h1>
+        <p class="page-subtitle">Manage all announcements</p>
+    </div>
+    <a href="{% url 'add_announcement' %}" class="btn">+ New Announcement</a>
+</div>
+
+{% for a in announcements %}
+<div class="announcement-item" style="padding:20px 22px;">
+    <div class="flex-between">
+        <div>
+            <h3 style="font-size:17px;">{{ a.title }}</h3>
+            <div class="meta" style="margin-top:4px;">
+                {{ a.date_posted|date:"F j, Y · g:i A" }}
+                {% if not a.is_active %}
+                &nbsp;<span class="badge badge-muted">Inactive</span>
+                {% else %}
+                &nbsp;<span class="badge badge-success">Active</span>
+                {% endif %}
+            </div>
+        </div>
+        <div style="display:flex; gap:8px;">
+            <a href="{% url 'edit_announcement' a.pk %}" class="btn btn-sm btn-warning">Edit</a>
+            <a href="{% url 'delete_announcement' a.pk %}" class="btn btn-sm btn-danger">Delete</a>
+        </div>
+    </div>
+    <p style="margin-top:10px; font-size:14px; color:var(--muted); line-height:1.6;">{{ a.content|truncatechars:200 }}
+    </p>
+    <a href="{% url 'announcement_detail' a.pk %}" style="font-size:13px; margin-top:8px; display:inline-block;">Read
+        more →</a>
+</div>
+{% empty %}
+<div class="card" style="text-align:center; padding:48px;">
+    <p style="font-size:32px; margin-bottom:12px;">📭</p>
+    <p class="text-muted">No announcements yet.</p>
+    <a href="{% url 'add_announcement' %}" class="btn mt-16">Create First Announcement</a>
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'students/base.html' %}
+{% block title %}{{ announcement.title }} — SMS{% endblock %}
+{% block content %}
+
+<div class="flex-between mb-16">
+    <h1 class="page-title">{{ announcement.title }}</h1>
+    <a href="{% url 'announcement_list' %}" class="btn btn-secondary">← Back</a>
+</div>
+
+<div class="card" style="max-width:720px;">
+    <div style="color:var(--muted); font-size:13px; margin-bottom:18px;">
+        Posted on {{ announcement.date_posted|date:"F j, Y · g:i A" }}
+        {% if announcement.is_active %}
+        &nbsp;<span class="badge badge-success">Active</span>
+        {% else %}
+        &nbsp;<span class="badge badge-muted">Inactive</span>
+        {% endif %}
+    </div>
+    <p style="line-height:1.8; font-size:15px;">{{ announcement.content }}</p>
+    <div style="margin-top:24px; display:flex; gap:10px;">
+        <a href="{% url 'edit_announcement' announcement.pk %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'delete_announcement' announcement.pk %}" class="btn btn-danger">Delete</a>
+    </div>
+</div>
+
+{% endblock %}

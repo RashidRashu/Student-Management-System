@@ -1,0 +1,76 @@
+{% extends 'students/base.html' %}
+{% load extras %}
+
+{% block content %}
+<style>
+/* page-specific styles */
+.attendance-form .form-group {
+    margin-right: 16px;
+    display: inline-block;
+}
+.attendance-form input[type="date"] {
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    background: var(--bg2);
+    color: var(--text);
+}
+.attendance-table .table {
+    width: 100%;
+}
+.attendance-table td.checkbox-cell {
+    text-align: center;
+}
+</style>
+
+<h2 class="page-title">Mark Attendance - {{ course.course_code }} ({{ course.course_name }})</h2>
+
+<form method="get" class="attendance-form" style="margin-bottom: 15px;">
+  <div class="form-group">
+    <label><b>Date:</b></label>
+    <input type="date" name="date" value="{{ selected_date|date:'Y-m-d' }}">
+  </div>
+  <button class="btn btn-sm" type="submit">Load</button>
+</form>
+
+<form method="post">
+  {% csrf_token %}
+  <input type="hidden" name="date" value="{{ selected_date|date:'Y-m-d' }}">
+
+  <div class="table-wrap attendance-table">
+    <table class="table">
+        <thead>
+            <tr>
+              <th>Roll No</th>
+              <th>Name</th>
+              <th>Present</th>
+              <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for s in students %}
+            <tr>
+              <td>{{ s.roll_number }}</td>
+              <td>{{ s.first_name }} {{ s.last_name }}</td>
+
+              {% with st=existing_map|get_item:s.id %}
+              <td class="checkbox-cell">
+                <input type="checkbox" name="present" value="{{ s.id }}"
+                       {% if st == "Present" %}checked{% endif %}>
+              </td>
+              <td>{% if st %}{{ st }}{% else %}Not marked{% endif %}</td>
+              {% endwith %}
+            </tr>
+    {% empty %}
+            <tr><td colspan="4" style="text-align:center; color:var(--muted); padding:32px;">No enrolled students found.</td></tr>
+    {% endfor %}
+        </tbody>
+    </table>
+  </div>
+
+  <br>
+  <button class="btn" type="submit">Save Attendance</button>
+  <a class="btn btn-outline" href="{% url 'attendance_report' course.id %}">View Report</a>
+</form>
+<a class="btn btn-outline" href="{% url 'course_detail' course.id %}">Back</a>
+{% endblock %}
